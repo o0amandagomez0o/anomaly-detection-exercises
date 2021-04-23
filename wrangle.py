@@ -4,6 +4,8 @@ import math
 from sklearn import metrics
 import datetime
 
+from env import host, user, password
+
 from scipy.stats import entropy
 
 import warnings
@@ -41,6 +43,63 @@ def get_logs():
     df = df.drop(columns=['col1', 'col2']).set_index('date').sort_index()
     
     df['cohort'] = np.where(df.cohort.isnull(), 0, df.cohort)
+    
+    return df
+
+
+
+
+
+def get_connection(db, user=user, host=host, password=password):
+    '''
+    This function uses my info from my env file to
+    create a connection url to access the Codeup db.
+    '''
+    
+    return f'mysql+pymysql://{user}:{password}@{host}/{db}'
+
+
+
+    
+
+def acq_logs():
+    """
+    This function pulls in a full JOINed dataset from codeup's db
+    And returns a pandas DF.
+    """
+    sql_query = """
+    SELECT *
+    FROM logs as l
+    JOIN cohorts as c ON c.id = l.cohort_id
+    """
+    return pd.read_sql(sql_query, get_connection('curriculum_logs'))
+
+
+
+
+
+def prep_logs():
+    """
+    prep_logs reads in SQL
+    - renames cols
+     - reassigns dtypes
+     - merges data-time and sets as index
+     - adds day/month col
+     - rename observations in program_id
+    """
+    df = acq_logs()
+
+    df['datetime'] = df['date']+ " " + df['time']
+    
+    df.datetime = pd.to_datetime(df.datetime)
+    
+    df = df.drop(columns=['date', 'time', 'id', 'slack', 'created_at', 'updated_at', 'deleted_at']).set_index('datetime').sort_index()
+    
+    df['weekday'] = df.index.day_name()
+    
+    df['month'] = df.index.month
+    
+    df['program_id'] = df.program_id.replace({1: "FS_PHP", 2: "FS_Java", 3: "DS", 4: "frontend"})
     
     return df
 
