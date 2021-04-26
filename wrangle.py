@@ -222,7 +222,7 @@ def clean_zillow(df):
     """
     
     #df = pd.read_csv('zillow.csv')
-    df = df.set_index("parcelid")
+    #df = df.set_index("parcelid")
     
     # Restrict df to only properties that meet single-use criteria
     single_use = [260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 273, 275, 276, 279]
