@@ -1,0 +1,22 @@
+SQL function just added another layer of unnecessary step and has about the same amt of info.
+EASley: 
+-845 logs in the most, 
+    - justin is #2
+There are spikes in quiz days
+There are valleys on holidays and natural disasters
+Sa/Sun are the lowest log in days followed by Wed (overall as well)
+
+Staff cohort has the most logins ;)
+Everglades only logged in on Wed
+Denali: Sun
+Apollo:Th
+Franklin: nover logged in on Mon
+Badlands: never logged in on Sat
+Ike: never logged in on Sun
+
+```cats = [ 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+df['weekday'] = pd.Categorical(df.weekday, categories=cats, ordered=True)```
+ Life saver for getting barcharts in "order"
+ 
+
